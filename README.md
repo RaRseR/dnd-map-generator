@@ -1,1 +1,1 @@
-# dnd-map-generator-
+# dnd-map-generator
