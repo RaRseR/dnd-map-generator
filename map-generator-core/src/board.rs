@@ -66,7 +66,7 @@ impl<'a> Index<Pos> for Board<'a> {
 
     #[inline]
     fn index(&self, p: Pos) -> &Land<'a> {
-        &self.cells[self.index_at(p.x, p.y)]
+        &self.tiles[self.index_at(p.x, p.y)]
     }
 }
 
@@ -74,7 +74,7 @@ impl<'a> IndexMut<Pos> for Board<'a> {
     #[inline]
     fn index_mut(&mut self, p: Pos) -> &mut Land<'a> {
         let idx = self.index_at(p.x, p.y);
-        &mut self.cells[idx]
+        &mut self.tiles[idx]
     }
 }
 
@@ -82,12 +82,12 @@ impl<'a> serde::Serialize for Board<'a> {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeMap;
 
-        struct Cells<'a, 'b: 'a> {
+        struct Tiles<'a> {
             w: usize,
             h: usize,
-            vec: &'a Vec<Land<'b>>,
+            vec: &'a Vec<Land>,
         }
-        impl<'a, 'b> serde::Serialize for Cells<'a, 'b> {
+        impl<'a> serde::Serialize for Tiles<'a> {
             fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
                 use serde::ser::SerializeSeq;
                 let mut seq = serializer.serialize_seq(Some(self.h))?;
@@ -102,11 +102,11 @@ impl<'a> serde::Serialize for Board<'a> {
         map.serialize_entry("width", &self.width)?;
         map.serialize_entry("height", &self.height)?;
         map.serialize_entry(
-            "cells",
-            &Cells {
+            "tiles",
+            &Tiles {
                 w: self.width,
                 h: self.height,
-                vec: &self.cells,
+                vec: &self.tiles,
             },
         )?;
 
