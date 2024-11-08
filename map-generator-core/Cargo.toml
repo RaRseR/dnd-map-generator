@@ -1,0 +1,11 @@
+[package]
+name = "map-generator-core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = "1.0.214"
+wasm-bindgen = "0.2"
